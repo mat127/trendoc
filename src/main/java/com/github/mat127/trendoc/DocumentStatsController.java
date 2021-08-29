@@ -17,16 +17,16 @@ public class DocumentStatsController {
     DocumentStatsService stats;
 
     @GetMapping("/document/{document_id}/stats")
-	public List<Map<String,Object>> getDocumentStats(
+    public List<Map<String,Object>> getDocumentStats(
         @PathVariable("document_id") final UUID documentId,
         @RequestParam(required = false) final LocalDate since,
         @RequestParam(required = false) final LocalDate till
     ) {
         return this.stats.getDocumentStats(documentId, since, till);
-	}
+    }
 
     @GetMapping("/document/trending")
-	public List<Map<String, Object>> getTrendingDocuments(
+    public List<Map<String, Object>> getTrendingDocuments(
         @RequestParam(required = false) LocalDate since,
         @RequestParam(required = false) final LocalDate till,
         @RequestParam(value = "min_disp_count", defaultValue = "1000") final int minDisplayCount,
@@ -36,5 +36,5 @@ public class DocumentStatsController {
         if(since == null && till == null)
             since = LocalDate.now().minusDays(7);
         return this.stats.getTrendingDocuments(since, till, minDisplayCount, limit);
-	}
+    }
 }
