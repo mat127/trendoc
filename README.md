@@ -22,7 +22,7 @@ Edit the [`appplication.properties`](src/main/resources/application.properties) 
     {"document_id":"5c910628-0838-11ec-ad75-6c02e0970836","score":0.01396002}
   ]
   
-  # 0 < score <= 1
+  // 0 < score <= 1
   ```
 - `/document/{id}/stats?since={yyyy-mm-dd}&till={yyyy-mm-dd}`
   - `id` - document id (UUID)
