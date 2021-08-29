@@ -29,7 +29,7 @@ import org.testcontainers.containers.MySQLContainer;
 public class DocumentStatsCollectorTests {
 
     @ClassRule
-    public static MySQLContainer mySQLContainer = new MySQLContainer<>("mysql:8.0.25")
+    public static MySQLContainer mySQLContainer = new MySQLContainer<>("mysql:latest")
         .withDatabaseName("integration-tests-db")
         .withUsername("sa")
         .withPassword("sa")

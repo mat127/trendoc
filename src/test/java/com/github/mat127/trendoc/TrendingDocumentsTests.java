@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,7 +29,7 @@ import org.testcontainers.containers.MySQLContainer;
 public class TrendingDocumentsTests {
 
     @ClassRule
-    public static MySQLContainer mySQLContainer = new MySQLContainer<>("mysql:8.0.25")
+    public static MySQLContainer mySQLContainer = new MySQLContainer<>("mysql:latest")
         .withDatabaseName("integration-tests-db")
         .withUsername("sa")
         .withPassword("sa")
@@ -63,16 +62,19 @@ public class TrendingDocumentsTests {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private FormattingConversionService formatter;
-
     private Logger logger = LoggerFactory.getLogger(TrendingDocumentsTests.class);
 
     @Test
     public void testTrendingDocuments() throws Exception {
         MvcResult result = mvc.perform(get("/document/trending")
+            // adjust query dates to the sample data
+            .queryParam("since", "2021-08-20")
+            .queryParam("till", "2021-08-27")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
+            // rather demo than test, just check the response body structure
+            // and the top document according to sample data
+            .andExpect(jsonPath("$[0].document_id").value("5c910dde-0838-11ec-ad75-6c02e0970836"))
             .andReturn();
         logger.info("\n\nTrending documents received:\n\t {}\n",
             result.getResponse().getContentAsString()
