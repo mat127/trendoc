@@ -1,6 +1,6 @@
 package com.github.mat127.trendoc;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -79,12 +79,12 @@ public class DocumentStatsCollectorTests {
     private class DocumentStatsRecord {
 
         private final UUID documentId;
-        private final Date date;
+        private final LocalDate date;
         private final int displayCount;
 
         public DocumentStatsRecord(final int displayCount) {
             this.documentId = UUID.randomUUID();
-            this.date = new Date();
+            this.date = LocalDate.now();
             this.displayCount = displayCount;
         }
 

@@ -1,10 +1,10 @@
 package com.github.mat127.trendoc;
 
-import java.util.Date;
+import java.time.LocalDate;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +25,13 @@ public class DocumentStatsCollector {
      * @param date       date when it was displayed
      */
     @RabbitListener(queues=DocumentStatsMessagingConfig.DOCUMENT_DISPLAYED_QUEUE_NAME)
-    public void receive(final String documentId, @Header("date")final Date date) {
+    public void receive(
+        final String documentId,
+        final Message message
+    ) {
+        // @Header annotation did not work because of missing converter
+        // String <-> LocalDate, failed to add custom converter that is why:
+        LocalDate date = parseDateFrom(message);
         jdbc.update(
             "INSERT document_stats (document_id,day,display_count,display_trend)"
             + " VALUES (?,?,1,1)"
@@ -41,5 +47,10 @@ public class DocumentStatsCollector {
             + " ON DUPLICATE KEY UPDATE display_trend=display_trend-1",
             documentId, date
         );
+    }
+
+    private static LocalDate parseDateFrom(final Message message) {
+        String str = message.getMessageProperties().getHeader("date");
+        return LocalDate.parse(str);
     }
 }

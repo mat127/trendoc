@@ -1,6 +1,6 @@
 package com.github.mat127.trendoc;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
@@ -16,7 +16,7 @@ public class DocumentStatsEventGenerator {
 
     public void generateDisplayedEvent(
         final UUID documentId,
-        final Date date
+        final LocalDate date
     ) {
         Message message = MessageBuilder.withBody(documentId.toString().getBytes())
             .setHeader("date", date)
@@ -30,7 +30,7 @@ public class DocumentStatsEventGenerator {
 
     public void generateDisplayedEvents(
         final UUID documentId,
-        final Date date,
+        final LocalDate date,
         final int count
     ) {
         for(int i=0; i < count; i++) {
