@@ -74,7 +74,7 @@ public class TrendingDocumentsTests {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
-        logger.info("Trending documents received: {}",
+        logger.info("\n\nTrending documents received:\n\t {}\n",
             result.getResponse().getContentAsString()
         );
     }

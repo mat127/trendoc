@@ -16,7 +16,7 @@ public class DocumentStatsCollector {
     /**
      * Listens to the queue where the "document.displayed" events (as messages)
      * arrive and updates the aggregate table document_stats that is used by
-     * the DocumentStatsService.
+     * the DocumentStatsService (see the explained table structure there).
      * 
      * @see DocumentStatsMessagingConfig
      * @see DocumentStatsService

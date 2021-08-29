@@ -9,6 +9,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+/**
+ * Operates on an aggregate table document_stats:
+ * 
+ * +---------------+-------------+------+-----+---------+-------+
+ * | Field         | Type        | Null | Key | Default | Extra |
+ * +---------------+-------------+------+-----+---------+-------+
+ * | document_id   | varchar(36) | NO   |     | NULL    |       |
+ * | day           | date        | NO   |     | NULL    |       |
+ * | display_count | int         | NO   |     | 0       |       |
+ * | display_trend | int         | NO   |     | 0       |       |
+ * +---------------+-------------+------+-----+---------+-------+
+ * 
+ * display_count contains number of displays of the document having the
+ * document_id during the day 'day'.
+ * 
+ * display_trend contains the difference between the number of displays of
+ * the document having the document_id during the day 'day' and the day
+ * before.
+ * 
+ * @see DocumentStatsCollector to see how the data are loaded in the table
+ */
 @Component
 public class DocumentStatsService {
 
@@ -25,7 +46,13 @@ public class DocumentStatsService {
         if(till == null)
             till = LocalDate.now().minusDays(1);
         Formatter query = new Formatter()
-            // normalize the score to display_count to get a comparable value
+            // the score of trending documents:
+            // - higher value means more trending
+            // - negative value means "un-trending"
+            // - calculated as an average gradient of the document display count
+            //   during the days
+            // - it is normalized to display_count to get a value comparable
+            //   among documents with different amounts of displays
             .format("SELECT document_id, AVG(display_trend)/MAX(display_count) AS score ")
             .format(" FROM document_stats")
             .format(" WHERE day<='%tF'", till);
